@@ -3,11 +3,15 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class GadeykaTest {
 
@@ -558,6 +562,39 @@ public class GadeykaTest {
 
         //assert
         Assert.assertEquals(actualResult, expectedResult);
+        driver.quit();
+    }
+
+
+    //TC_11_01 with implicitlyWait
+    @Test
+    public void test1Openweathermap_justGoToGuide_gdiksanov() {
+        System.setProperty("webdriver.chrome.driver", "/Applications/WebDrivers/chromedriver");
+        WebDriver driver = new ChromeDriver();
+
+        String url = "https://openweathermap.org/";
+
+        driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+        driver.get(url);
+
+        driver.manage().window().maximize();
+
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.invisibilityOfElementLocated(
+                        By.xpath("//div[@class='owm-loader-container']/div")));
+
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+
+        driver.findElement(By.xpath("//div[@id='desktop-menu']//a[@href='/guide']")).click();
+
+        String currentUrl = driver.getCurrentUrl();
+
+        String currentTitle = driver.getTitle();
+
+        Assert.assertEquals(currentUrl, "https://openweathermap.org/guide");
+
+        Assert.assertEquals(currentTitle, "OpenWeatherMap API guide - OpenWeatherMap");
+
         driver.quit();
     }
 
